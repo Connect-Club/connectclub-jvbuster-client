@@ -1,0 +1,22 @@
+m=audio 1 RTP/SAVPF 111
+c=IN IP4 0.0.0.0
+a=rtcp:1 IN IP4 0.0.0.0
+a=sendonly
+a=rtpmap:111 opus/48000/2
+a=fmtp:111 minptime=10; stereo=0; useinbandfec=1
+a=rtcp-fb:111 transport-cc
+a=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level
+a=extmap:5 http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01
+a=mid:{{.MediaId}}
+a=rtcp-mux
+a=msid:{{.Endpoint}} {{.Id}}
+{{range .SsrcGroups -}}
+a=ssrc-group:{{.Semantics}} {{.Ssrcs | Ints64ToStrings | Join " "}}
+{{end -}}
+{{range .Ssrcs -}}
+a=ssrc:{{.}} cname:{{$.Endpoint}}
+{{end -}}
+{{range .Candidates -}}
+a=candidate:{{.Foundation}} {{.Component}} {{.Protocol}} {{.Priority}} {{.Ip}} {{.Port}} typ {{.Type | ToLower}}{{if .RelAddr}} raddr {{.RelAddr}}{{end}}{{if .RelPort}} rport {{.RelPort}}{{end}} generation {{.Generation}}
+{{end -}}
+a=end-of-candidates
