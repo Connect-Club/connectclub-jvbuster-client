@@ -1,4 +1,4 @@
-module gitlab.com/connect.club/jitsi/connectclub-jvbuster-client.git
+module github.com/Connect-Club/connectclub-jvbuster-client
 
 go 1.18
 
